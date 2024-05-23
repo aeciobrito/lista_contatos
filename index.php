@@ -4,7 +4,7 @@ require_once 'Contato.php';
 require_once 'ContatoDAO.php';
 
 $contatoDAO = new ContatoDAO();
-print_r($contatoDAO->getAll());
+$contatos = $contatoDAO->getAll();
 ?>
 
 <!DOCTYPE html>
@@ -19,17 +19,19 @@ print_r($contatoDAO->getAll());
     <div class="container">
         <h1 class="my-4">Lista de Contatos</h1>
         <a href="detalhes.php" class="btn btn-primary mb-4">Adicionar Contato</a>
-        <div class="row row-cols-1 row-cols-md-3 g-4">            
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <?php foreach($contatos as $contato) : ?>
                 <div class="col">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Pessoa X</h5>
-                            <p class="card-text">NN-NNNN-NNNN</p>
-                            <p class="card-text">mail@mail.com</p>
+                            <h5 class="card-title"><?php echo $contato->getNome(); ?></h5>
+                            <p class="card-text"><?php echo $contato->getTelefone(); ?></p>
+                            <p class="card-text"><?php echo $contato->getEmail(); ?></p>
                             <a href="detalhes.html" class="btn btn-primary">Detalhes</a>
                         </div>
                     </div>
-                </div>            
+                </div>  
+            <?php endforeach; ?>
         </div>
     </div>
 </body>
