@@ -1,4 +1,11 @@
+<?php
+require_once 'Database.php';
+require_once 'Contato.php';
+require_once 'ContatoDAO.php';
 
+$contatoDAO = new ContatoDAO();
+print_r($contatoDAO->getAll());
+?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
