@@ -5,10 +5,27 @@ require_once 'ContatoDAO.php';
 $contatoDAO = new ContatoDAO();
 $contato = null;
 
+if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+    $contato  = $contatoDAO->getById($_GET['id']);
+}
+
 if($_SERVER['REQUEST_METHOD'] === 'POST') {    
     if(isset($_POST['save'])) {
-        $novoContato = new Contato(null, $_POST['nome'], $_POST['telefone'], $_POST['email']);
-        $contatoDAO->create($novoContato);
+        if (isset($_POST['id']) && !empty($_POST['id'])) {
+            $contato  = $contatoDAO->getById($_POST['id']);
+
+            $contato->setNome($_POST['nome']);
+            $contato->setTelefone($_POST['telefone']);
+            $contato->setEmail($_POST['email']);
+
+            $contatoDAO->update($contato);
+        } else {
+            $novoContato = new Contato(null, $_POST['nome'], $_POST['telefone'], $_POST['email']);
+            $contatoDAO->create($novoContato);            
+        }
+
+        header('Location: index.php');
+        exit;
     }
 }
 ?>
