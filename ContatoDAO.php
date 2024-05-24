@@ -11,7 +11,23 @@ class ContatoDAO {
         $this->db = Database::getInstance()->getConnection();
     }
 
-    // criar um getall
+    public function getById($id) {
+        try {
+            $sql = "SELECT * FROM contatos_info WHERE id = :id";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+
+            $contato = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $contato ? new Contato($contato['id'], $contato['nome'], $contato['telefone'], $contato['email']) : null;
+
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    
     public function getAll() {
         try {
             $sql = "SELECT * FROM contatos_info";
