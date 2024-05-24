@@ -1,3 +1,18 @@
+<?php
+require_once 'Contato.php';
+require_once 'ContatoDAO.php';
+
+$contatoDAO = new ContatoDAO();
+$contato = null;
+
+if($_SERVER['REQUEST_METHOD'] === 'POST') {    
+    if(isset($_POST['save'])) {
+        $novoContato = new Contato(null, $_POST['nome'], $_POST['telefone'], $_POST['email']);
+        $contatoDAO->create($novoContato);
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -12,20 +27,20 @@
     <div class="container">
         <h1 class="my-4">Detalhes do Contato</h1>
         <form action="detalhes.php" method="POST">
-            <input type="hidden" name="id" value="1">
+            <input type="hidden" name="id" value="<?php echo $contato ? $contato->getId() : ''  ?>">
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
                         <label for="nome">Nome</label>
-                        <input type="text" class="form-control" id="nome" name="nome" value="1" required>
+                        <input type="text" class="form-control" id="nome" name="nome" value="<?php echo $contato ? $contato->getNome() : ''  ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="telefone">Telefone</label>
-                        <input type="text" class="form-control" id="telefone" name="telefone" value="1">
+                        <input type="text" class="form-control" id="telefone" name="telefone" value="<?php echo $contato ? $contato->getTelefone() : ''  ?>">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="1" required>
+                        <input type="email" class="form-control" id="email" name="email" value="<?php echo $contato ? $contato->getEmail() : ''  ?>" required>
                     </div>
                     <button type="submit" name="save" class="btn btn-success">Salvar</button>
 
