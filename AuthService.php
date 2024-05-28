@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once 'Usuario.php';
 require_once 'UsuarioDAO.php';
 
@@ -14,12 +14,32 @@ if ($type === "register") {
     $new_password = filter_input(INPUT_POST, "new_password");
     $confirm_password = filter_input(INPUT_POST, "confirm_password");
 
-    // Criação do Usuário no banco de dados por uso do UsuarioDAO
-    $usuario = new Usuario(null, $new_nome, $new_password, $new_email, null);
-    $usuarioDAO = new UsuarioDAO();
-    $usuarioDAO->create($usuario);
-    header('Location: index.php');
+    // Verificação dos dados informados
+    if ($new_email && $new_nome && $new_password) {
+        if ($new_password === $confirm_password) {
+            // Etapa de segurança: criação de senha segura e geração de token
+            $hashed_passowrd = password_hash($new_password, PASSWORD_DEFAULT);
+            $token = bin2hex(random_bytes(25));
+            
+            // Criação do Usuário no banco de dados por uso do UsuarioDAO
+            $usuario = new Usuario(null, $new_nome, $hashed_passowrd, $new_email, $token);
+            $usuarioDAO = new UsuarioDAO();
+            $success = $usuarioDAO->create($usuario);
 
+            if($success) {
+                $_SESSION['token'] = $token;
+                header('Location: index.php');
+                exit();
+            } else {
+                echo "Erro ao registrar no banco de dados!";
+                exit();
+            }
+        } else {
+            echo "Senhas incompativeis!";
+        }
+    } else {
+        echo "Dados de input inválidos!";
+    }
 } elseif ($type === "login") {
     //// Login de usuário
 }
