@@ -1,4 +1,7 @@
 <?php
+
+use function PHPSTORM_META\type;
+
 session_start();
 require_once 'Usuario.php';
 require_once 'UsuarioDAO.php';
@@ -61,6 +64,16 @@ if ($type === "register") {
     } else {
         echo "Email ou Senha inválidos!";
     }
+} elseif ($type === "logout") {
+    // Limpa todas as variáveis da sessão
+    $_SESSION = array();
+
+    // Destruir a sessão
+    session_destroy();
+
+    // Redirecionar para a página de login
+    header('Location: auth.php');
+    exit();
 }
 
 ?>
