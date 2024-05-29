@@ -1,56 +1,65 @@
 <?php
 
-class Contato
+class Usuario
 {
     private $id;
     private $nome;
-    private $telefone;
+    private $senha;
     private $email;
+    private $token;
 
-    public function __construct($id, $nome, $telefone, $email)
+    public function __construct($id, $nome, $senha, $email, $token)
     {
         $this->id = $id;
         $this->nome = $nome;
-        $this->telefone = $telefone;
+        $this->senha = $senha;
         $this->email = $email;
+        $this->token = $token;
     }
 
     public function getId()
     {
         return $this->id;
     }
-    
+
     public function getNome()
     {
         return $this->nome;
     }
-    
-    public function getTelefone()
+
+    public function getSenha()
     {
-        return $this->telefone;
+        return $this->senha;
     }
-    
+
     public function getEmail()
     {
         return $this->email;
     }
 
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+
     public function setNome($nome)
     {
-        // Verificador se o nome não é vazio e tem ao menos duas letras, e não contém número
-        // enfim, se é um nome válido
         $this->nome = $nome;
     }
-    
-    public function setTelefone($telefone)
+
+    public function setSenha($senha)
     {
-        // Verificar se o número é um telefone válido
-        $this->telefone = $telefone;
+        $this->senha = $senha;
     }
-    
+
     public function setEmail($email)
     {
-        // Verificar se um email é válido
         $this->email = $email;
     }
+
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }    
 }
