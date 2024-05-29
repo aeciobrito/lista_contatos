@@ -42,6 +42,25 @@ if ($type === "register") {
     }
 } elseif ($type === "login") {
     //// Login de usuário
+
+    // Receber os dados vindos do HTML
+    $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+    $password = filter_input(INPUT_POST, "password");
+
+    // Verificar se o cadastro existe
+    $usuarioDAO = new UsuarioDAO();
+    $usuario = $usuarioDAO->getByEmail($email);    
+
+    // Redirecionar o usuário para o index.php autenticado
+    if($usuario && password_verify($password, $usuario->getSenha())) {
+        $token = bin2hex(random_bytes(25));
+        $usuarioDAO->updateToken($usuario->getId(), $token);
+        $_SESSION['token'] = $token;
+        header('Location: index.php');
+        exit();
+    } else {
+        echo "Email ou Senha inválidos!";
+    }
 }
 
 ?>
