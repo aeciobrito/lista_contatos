@@ -27,15 +27,20 @@ if ($type === "register") {
             // Criação do Usuário no banco de dados por uso do UsuarioDAO
             $usuario = new Usuario(null, $new_nome, $hashed_passowrd, $new_email, $token);
             $usuarioDAO = new UsuarioDAO();
-            $success = $usuarioDAO->create($usuario);
 
-            if($success) {
-                $_SESSION['token'] = $token;
-                header('Location: index.php');
-                exit();
+            if(!$usuarioDAO->getByEmail($new_email)) {
+                $success = $usuarioDAO->create($usuario);
+
+                if($success) {
+                    $_SESSION['token'] = $token;
+                    header('Location: index.php');
+                    exit();
+                } else {
+                    echo "Erro ao registrar no banco de dados!";
+                    exit();
+                }
             } else {
-                echo "Erro ao registrar no banco de dados!";
-                exit();
+                echo "Email já utilizado";
             }
         } else {
             echo "Senhas incompativeis!";
