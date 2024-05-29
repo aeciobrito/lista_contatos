@@ -1,4 +1,7 @@
 <?php
+
+use function PHPSTORM_META\type;
+
 session_start();
 require_once 'Usuario.php';
 require_once 'UsuarioDAO.php';
@@ -24,15 +27,20 @@ if ($type === "register") {
             // Criação do Usuário no banco de dados por uso do UsuarioDAO
             $usuario = new Usuario(null, $new_nome, $hashed_passowrd, $new_email, $token);
             $usuarioDAO = new UsuarioDAO();
-            $success = $usuarioDAO->create($usuario);
 
-            if($success) {
-                $_SESSION['token'] = $token;
-                header('Location: index.php');
-                exit();
+            if(!$usuarioDAO->getByEmail($new_email)) {
+                $success = $usuarioDAO->create($usuario);
+
+                if($success) {
+                    $_SESSION['token'] = $token;
+                    header('Location: index.php');
+                    exit();
+                } else {
+                    echo "Erro ao registrar no banco de dados!";
+                    exit();
+                }
             } else {
-                echo "Erro ao registrar no banco de dados!";
-                exit();
+                echo "Email já utilizado";
             }
         } else {
             echo "Senhas incompativeis!";
@@ -61,6 +69,16 @@ if ($type === "register") {
     } else {
         echo "Email ou Senha inválidos!";
     }
+} elseif ($type === "logout") {
+    // Limpa todas as variáveis da sessão
+    $_SESSION = array();
+
+    // Destruir a sessão
+    session_destroy();
+
+    // Redirecionar para a página de login
+    header('Location: auth.php');
+    exit();
 }
 
 ?>
