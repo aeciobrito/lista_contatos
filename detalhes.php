@@ -1,4 +1,11 @@
 <?php
+session_start(); // Inicia uma sessão na página
+
+if(!isset($_SESSION['token'])) {
+    header("Location: auth.php");
+    exit();
+}
+
 require_once 'Contato.php';
 require_once 'ContatoDAO.php';
 
@@ -66,9 +73,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="email" class="form-control" id="email" name="email" value="<?php echo $contato ? $contato->getEmail() : ''  ?>" required>
                     </div>
                     <button type="submit" name="save" class="btn btn-success">Salvar</button>
-
-                    <button type="submit" name="delete" class="btn btn-danger">Excluir</button>
-
+                    <?php if($contato): ?>
+                        <button type="submit" name="delete" class="btn btn-danger">Excluir</button>
+                    <?php endif ?>
                     <a href="index.php" class="btn btn-secondary">Voltar</a>
                 </div>
             </div>
